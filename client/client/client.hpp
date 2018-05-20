@@ -8,11 +8,11 @@ namespace client
 
 struct Config : public util::BaseConfig
 {
-    Config() {}
     void InitConfig(int argc, char *argv[]) override;
-    [[noreturn]] inline void SendHelp() const override;
+    [[noreturn]] inline void SendHelp() const noexcept override;
     inline void Log(std::string const& str, char prefix = 'c') const override;
-    ~Config() override {}
+
+    ~Config() override = default;
 
     std::vector<char> m_msg;
 };

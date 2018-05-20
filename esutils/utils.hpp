@@ -6,13 +6,16 @@
 
 namespace util
 {
+constexpr ssize_t MSG_MAX_SIZE{ 64 * 1024 };
+
 struct BaseConfig
 {
     BaseConfig();
+    virtual ~BaseConfig() = default;
+
     virtual void InitConfig(int argc, char *argv[]) = 0;
-    [[noreturn]] virtual  inline void SendHelp() const = 0;
+    [[noreturn]] virtual  inline void SendHelp() const noexcept = 0;
     virtual inline void Log(std::string const& str, char prefix) const = 0;
-    virtual ~BaseConfig() {}
 
     struct ListenSocket
     {
@@ -29,9 +32,10 @@ struct BaseConfig
 
     Endpoint m_endpoint;
     ListenSocket m_socket;
-    static const ssize_t m_max_msg_size = 64 * 1024;
+    char __pad[4];
+    ssize_t const m_max_msg_size;
     bool m_use_tcp;
     bool m_use_verbose_output;
-    char __pad[2];
+    char ___pad[6];
 };
 } // namespace util
