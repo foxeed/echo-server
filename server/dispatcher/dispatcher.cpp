@@ -21,15 +21,6 @@
 
 namespace srv
 {
-constexpr std::string_view SERVER_HELP_TEXT{
-    R"raw(Command line arguments:
-    -h or --help        this page
-    -v or --verbose     log everything to stdout
-    -a <addr>           the default address for listening
-    -p <port>           the default port for listening
-    -proto <tcp/udp>    which protocol the server will use; default: tcp)raw"
-};
-constexpr std::string_view DBG_STOP_TOKEN{ "shutdown" };  // TODO: move into some constants namespace
 
 Dispatcher::Dispatcher(Config const& cfg) : m_cfg{ cfg }
 {
@@ -102,7 +93,7 @@ void Dispatcher::Start()
             + ", using protocol: " + (m_cfg.m_use_tcp ? "TCP" : "UDP"));
     }
 
-    std::vector<char> buff(1024, 0);
+    std::vector<char> buff(1024, 0);    // FIXME: compute magic constants at compile-time
     // TODO: make while(current_size <= max_msg_size) {m_ostream.write(buff); current_size+=bytes;}
 
     if(m_cfg.m_use_tcp)

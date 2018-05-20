@@ -14,16 +14,6 @@
 
 namespace client
 {
-constexpr std::string_view CLIENT_HELP_TEXT{
-    R"raw(Command line arguments:
-    -h or --help        this page
-    -v or --verbose     log everything to stdout
-    -a <addr>           the default address for listening
-    -p <port>           the default port for listening
-    -proto <tcp/udp>    which protocol the server will use; default: tcp
-    -m <message>        message, max 64 Kb)raw"
-};
-
 Client::Client(Config const& cfg) :
     m_cfg{ cfg },
     m_buff{ std::move(cfg.m_msg) }

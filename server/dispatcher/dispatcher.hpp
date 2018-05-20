@@ -3,6 +3,7 @@
 #include <iosfwd>
 #include <vector>
 #include <thread>
+#include <string_view>
 
 #include <netinet/in.h>
 
@@ -10,6 +11,16 @@
 
 namespace srv
 {
+
+constexpr std::string_view SERVER_HELP_TEXT{
+    R"raw(Command line arguments:
+    -h or --help        this page
+    -v or --verbose     log everything to stdout
+    -a <addr>           the default address for listening
+    -p <port>           the default port for listening
+    -proto <tcp/udp>    which protocol the server will use; default: tcp)raw" };
+constexpr std::string_view DBG_STOP_TOKEN{ "shutdown" };  // TODO: move into some constants namespace
+
 struct Config : public util::BaseConfig
 {
     Config() : m_total_threads{ 1 } {}

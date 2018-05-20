@@ -1,10 +1,20 @@
 #pragma once
 
 #include <vector>
+#include <string_view>
 #include "../../esutils/utils.hpp"
 
 namespace client
 {
+
+constexpr std::string_view CLIENT_HELP_TEXT{
+    R"raw(Command line arguments:
+    -h or --help        this page
+    -v or --verbose     log everything to stdout
+    -a <addr>           the default address for listening
+    -p <port>           the default port for listening
+    -proto <tcp/udp>    which protocol the server will use; default: tcp
+    -m <message>        message, max 64 Kb)raw" };
 
 struct Config : public util::BaseConfig
 {

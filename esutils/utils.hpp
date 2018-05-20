@@ -6,6 +6,7 @@
 
 namespace util
 {
+
 constexpr ssize_t MSG_MAX_SIZE{ 64 * 1024 };
 
 struct BaseConfig
