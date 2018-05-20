@@ -16,7 +16,7 @@ struct Config : public util::BaseConfig
     void InitConfig(int argc, char *argv[]) override;
     [[noreturn]] inline void SendHelp() const noexcept override;
     inline void Log(std::string const& str, char prefix = 'd') const override;
-    ~Config() override {}
+    ~Config() override = default;
 
     std::size_t m_total_threads;
 };

@@ -33,7 +33,7 @@ struct BaseConfig
     Endpoint m_endpoint;
     ListenSocket m_socket;
     char __pad[4];
-    ssize_t const m_max_msg_size;
+    std::size_t const m_max_msg_size;
     bool m_use_tcp;
     bool m_use_verbose_output;
     char ___pad[6];

@@ -21,6 +21,15 @@
 
 namespace srv
 {
+constexpr std::string_view SERVER_HELP_TEXT{
+    R"raw(Command line arguments:
+    -h or --help        this page
+    -v or --verbose     log everything to stdout
+    -a <addr>           the default address for listening
+    -p <port>           the default port for listening
+    -proto <tcp/udp>    which protocol the server will use; default: tcp)raw"
+};
+constexpr std::string_view DBG_STOP_TOKEN{ "shutdown" };  // TODO: move into some constants namespace
 
 Dispatcher::Dispatcher(Config const& cfg) : m_cfg{ cfg }
 {
@@ -95,7 +104,6 @@ void Dispatcher::Start()
 
     std::vector<char> buff(1024, 0);
     // TODO: make while(current_size <= max_msg_size) {m_ostream.write(buff); current_size+=bytes;}
-    constexpr std::string_view const stop_token{ "shutdown" };  // TODO: move into some constants namespace
 
     if(m_cfg.m_use_tcp)
     {
@@ -161,9 +169,9 @@ void Dispatcher::Start()
             close(connect_socket);
 
             std::string_view buff_view(buff.data(), buff.size());
-            auto pos = buff_view.find(stop_token);
+            auto pos = buff_view.find(DBG_STOP_TOKEN);
             if(pos != std::string_view::npos
-               && buff_view[pos + stop_token.size()] == '\0')
+               && buff_view[pos + DBG_STOP_TOKEN.size()] == '\0')
             {
                 m_cfg.Log("got a stop phrase, shutting down");
                 break;
@@ -205,16 +213,17 @@ void Dispatcher::Start()
                                                               0,
                                                               reinterpret_cast<sockaddr *>(&m_endpoint),
                                                               m_endpoint_size));
-            if (bytes_sent < 0)
+            if (bytes_sent == 0)
             {
                 close(server_listen_socket);
                 throw util::EchoServerException("cannot send packet");
             }
 
+            // TODO: test against finite state machine, which matches the stop phrase
             std::string_view buff_view(buff.data(), buff.size());
-            auto pos = buff_view.find(stop_token);
+            auto pos = buff_view.find(DBG_STOP_TOKEN);
             if(pos != std::string_view::npos
-               && buff_view[pos + stop_token.size()] == '\0')
+               && buff_view[pos + DBG_STOP_TOKEN.size()] == '\0')
             {
                 m_cfg.Log("got a stop phrase, shutting down");
                 break;
@@ -251,9 +260,13 @@ void Config::InitConfig(int argc, char *argv[])
     for(std::size_t i = 0; i < args.size(); ++i)
     {
         if (args[i] == "-h" || args[i] == "--help")
+        {
             SendHelp(); // this will end the program execution
+        }
         if (args[i] == "-v" || args[i] == "--verbose")
+        {
             m_use_verbose_output = true;
+        }
         if (args[i] == "-a" && i + 1 < args.size())
         {
             // do not allow to start at 0.0.0.0
@@ -315,14 +328,9 @@ void Config::Log(std::string const& str, char prefix) const
         std::cout << "[" << prefix << "] " << str << "\n";
 }
 
-void Config::SendHelp() const
+void Config::SendHelp() const noexcept
 {
-    std::cout << "Command line arguments:\n"
-              << "\t-h or --help\t\tthis page\n"
-              << "\t-v or --verbose\t\tlog everything to stdout\n"
-              << "\t-a <addr>\t\tthe default address for listening\n"
-              << "\t-p <port>\t\tthe default port for listening\n"
-              << "\t-proto <tcp/udp>\twhich protocol the server will use; default: tcp\n";
+    std::cout << SERVER_HELP_TEXT;
     util::exit_gracefully();
 }
 } // namespace srv

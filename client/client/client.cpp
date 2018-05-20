@@ -14,6 +14,16 @@
 
 namespace client
 {
+constexpr std::string_view CLIENT_HELP_TEXT{
+    R"raw(Command line arguments:
+    -h or --help        this page
+    -v or --verbose     log everything to stdout
+    -a <addr>           the default address for listening
+    -p <port>           the default port for listening
+    -proto <tcp/udp>    which protocol the server will use; default: tcp
+    -m <message>        message, max 64 Kb)raw"
+};
+
 Client::Client(Config const& cfg) :
     m_cfg{ cfg },
     m_buff{ std::move(cfg.m_msg) }
@@ -238,15 +248,9 @@ void Config::InitConfig(int argc, char *argv[])
 
 }
 
-void Config::SendHelp() const
+void Config::SendHelp() const noexcept
 {
-    std::cout << "Command line arguments:\n"
-              << "\t-h or --help\t\tthis page\n"
-              << "\t-v or --verbose\t\tlog everything to stdout\n"
-              << "\t-a <addr>\t\tthe default address for listening\n"
-              << "\t-p <port>\t\tthe default port for listening\n"
-              << "\t-proto <tcp/udp>\twhich protocol the server will use; default: tcp\n"
-              << "\t-m <message>\t\tmessage, max 64 Kb\n";
+    std::cout << CLIENT_HELP_TEXT;
     util::exit_gracefully();
 }
 
