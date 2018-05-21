@@ -14,12 +14,13 @@ constexpr std::string_view CLIENT_HELP_TEXT{
     -a <addr>           the default address for listening
     -p <port>           the default port for listening
     -proto <tcp/udp>    which protocol the server will use; default: tcp
-    -m <message>        message, max 64 Kb)raw" };
+    -m <message>        message, max 64 Kb
+)raw" };
 
 struct Config : public util::BaseConfig
 {
     void InitConfig(int argc, char *argv[]) override;
-    [[noreturn]] inline void SendHelp() const noexcept override;
+    [[noreturn]] inline void SendHelp() const override;
     inline void Log(std::string const& str, char prefix = 'c') const override;
 
     ~Config() override = default;

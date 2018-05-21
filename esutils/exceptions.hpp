@@ -7,7 +7,7 @@ namespace util
 {
 
 class EchoServerException
-        : public std::runtime_error
+    : public std::runtime_error
 {
 public:
     EchoServerException(std::string const& err_text)
@@ -19,7 +19,7 @@ public:
 };
 
 class ConfigException
-        : public EchoServerException
+    : public EchoServerException
 {
 public:
     ConfigException(std::string const& err_text)
@@ -39,4 +39,4 @@ public:
 {
     exit(EXIT_SUCCESS);
 }
-} // namespace util
+} //:e. namespace util

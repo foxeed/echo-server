@@ -11,13 +11,6 @@ constexpr ssize_t MSG_MAX_SIZE{ 64 * 1024 };
 
 struct BaseConfig
 {
-    BaseConfig();
-    virtual ~BaseConfig() = default;
-
-    virtual void InitConfig(int argc, char *argv[]) = 0;
-    [[noreturn]] virtual  inline void SendHelp() const noexcept = 0;
-    virtual inline void Log(std::string const& str, char prefix) const = 0;
-
     struct ListenSocket
     {
         int m_family;
@@ -30,6 +23,20 @@ struct BaseConfig
         uint16_t m_port;
         in_addr m_addr;
     };
+
+    enum class Protocol
+    {
+        pUNKNOWN,
+        pTCP,
+        pUDP,
+    };
+
+    BaseConfig();
+    virtual ~BaseConfig() = default;
+
+    virtual void InitConfig(int argc, char *argv[]) = 0;
+    [[noreturn]] virtual  inline void SendHelp() const = 0;
+    virtual inline void Log(std::string const& str, char prefix) const = 0;
 
     Endpoint m_endpoint;
     ListenSocket m_socket;

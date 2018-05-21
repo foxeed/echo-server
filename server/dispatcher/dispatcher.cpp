@@ -319,7 +319,7 @@ void Config::Log(std::string const& str, char prefix) const
         std::cout << "[" << prefix << "] " << str << "\n";
 }
 
-void Config::SendHelp() const noexcept
+void Config::SendHelp() const 
 {
     std::cout << SERVER_HELP_TEXT;
     util::exit_gracefully();

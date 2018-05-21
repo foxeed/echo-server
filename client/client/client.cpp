@@ -15,7 +15,7 @@
 namespace client
 {
 Client::Client(Config const& cfg) :
-    m_cfg{ cfg },
+    m_cfg{ std::move(cfg) },
     m_buff{ std::move(cfg.m_msg) }
 {
     m_endpoint = SetEndpointFromCfg();
@@ -238,7 +238,7 @@ void Config::InitConfig(int argc, char *argv[])
 
 }
 
-void Config::SendHelp() const noexcept
+void Config::SendHelp() const
 {
     std::cout << CLIENT_HELP_TEXT;
     util::exit_gracefully();
